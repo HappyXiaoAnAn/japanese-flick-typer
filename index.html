@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>フリック打！ - 日文九宮格滑動輸入練習</title>
+  <meta name="description" content="「フリック打！」是一個精美且功能強大的日文九宮格（Flick）鍵盤打字練習網頁，專為手機用戶設計。提供五十音單音練習、內建精選詞庫與自訂詞庫，並內建打字錯誤熱力圖分析，助你快速建立日文輸入的肌肉記憶！">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="dark-theme">
+  <div class="app-background"></div>
+
+  <!-- Main Container: Renders as a phone frame on desktop, full screen on mobile -->
+  <div class="phone-frame">
+    <div class="phone-bezel">
+      <div class="phone-notch"></div>
+      <div class="phone-screen">
+        
+        <!-- Status Bar Simulator (Top of Screen) -->
+        <div class="status-bar">
+          <span class="status-time" id="statusTime">12:00</span>
+          <div class="status-icons">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+              <path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L4.35 19.4c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0l1.9-1.9C9.07 19.58 10.48 20 12 20c4.97 0 9-4.03 9-9s-4.03-9-9-9zm0 15c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z"/>
+            </svg>
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- App Container -->
+        <div class="app-container">
+          
+          <!-- App Header -->
+          <header class="app-header">
+            <div class="logo">
+              <span class="accent-dot"></span>
+              <h1>フリック打！</h1>
+              <span class="logo-sub">Flick Practice</span>
+            </div>
+            <div class="header-actions">
+              <button id="themeToggleBtn" class="icon-btn" aria-label="切換主題">
+                <svg class="sun-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="5"></circle>
+                  <line x1="12" y1="1" x2="12" y2="3"></line>
+                  <line x1="12" y1="21" x2="12" y2="23"></line>
+                  <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                  <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                  <line x1="1" y1="12" x2="3" y2="12"></line>
+                  <line x1="21" y1="12" x2="23" y2="12"></line>
+                  <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                  <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+                <svg class="moon-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+              </button>
+              <button id="settingsBtn" class="icon-btn" aria-label="設定">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="3"></circle>
+                  <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                </svg>
+              </button>
+            </div>
+          </header>
+
+          <!-- Top HUD Stats Panel -->
+          <div class="hud-panel">
+            <div class="hud-stat">
+              <span class="hud-label">CPM</span>
+              <span class="hud-value" id="hudCpm">0</span>
+            </div>
+            <div class="hud-stat">
+              <span class="hud-label">正確率</span>
+              <span class="hud-value" id="hudAccuracy">100%</span>
+            </div>
+            <div class="hud-stat">
+              <span class="hud-label">進度</span>
+              <span class="hud-value" id="hudProgress">0/10</span>
+            </div>
+          </div>
+
+          <!-- Session Progress Bar -->
+          <div class="progress-bar-container">
+            <div class="progress-bar" id="sessionProgressBar" style="width: 0%"></div>
+          </div>
+
+          <!-- Target & Typing Display Area -->
+          <main class="practice-area">
+            <div class="word-card">
+              <!-- Mode Tag -->
+              <span class="mode-tag" id="currentModeTag">五十音模式</span>
+              
+              <!-- Target Word Display -->
+              <div class="target-word-container">
+                <!-- Furigana / Target Kana reading -->
+                <div class="reading-hint" id="targetReading">あ</div>
+                <!-- Main Kanji display -->
+                <div class="main-word" id="targetWord">あ</div>
+                <!-- Meaning/English description -->
+                <div class="word-meaning" id="wordMeaning"></div>
+              </div>
+
+              <!-- Typing Buffer Display (Feedback area) -->
+              <div class="input-display-container">
+                <div class="input-display-ghost" id="inputGhost">あ</div>
+                <div class="input-display-active" id="inputActive"></div>
+              </div>
+            </div>
+          </main>
+
+          <!-- Interactive Virtual Keyboard -->
+          <section class="keyboard-section">
+            
+            <!-- 3x4 Flick Grid Keyboard -->
+            <div class="flick-keyboard" id="flickKeyboard">
+              
+              <!-- Key 1: あ -->
+              <div class="keyboard-key" data-key-index="1" data-base-char="あ">
+                <span class="key-label center">あ</span>
+                <span class="key-label left-label">い</span>
+                <span class="key-label up-label">う</span>
+                <span class="key-label right-label">え</span>
+                <span class="key-label down-label">お</span>
+              </div>
+
+              <!-- Key 2: か -->
+              <div class="keyboard-key" data-key-index="2" data-base-char="か">
+                <span class="key-label center">か</span>
+                <span class="key-label left-label">き</span>
+                <span class="key-label up-label">く</span>
+                <span class="key-label right-label">け</span>
+                <span class="key-label down-label">こ</span>
+              </div>
+
+              <!-- Key 3: さ -->
+              <div class="keyboard-key" data-key-index="3" data-base-char="さ">
+                <span class="key-label center">さ</span>
+                <span class="key-label left-label">し</span>
+                <span class="key-label up-label">す</span>
+                <span class="key-label right-label">せ</span>
+                <span class="key-label down-label">そ</span>
+              </div>
+
+              <!-- Key 4: た -->
+              <div class="keyboard-key" data-key-index="4" data-base-char="た">
+                <span class="key-label center">た</span>
+                <span class="key-label left-label">ち</span>
+                <span class="key-label up-label">つ</span>
+                <span class="key-label right-label">て</span>
+                <span class="key-label down-label">と</span>
+              </div>
+
+              <!-- Key 5: な -->
+              <div class="keyboard-key" data-key-index="5" data-base-char="な">
+                <span class="key-label center">な</span>
+                <span class="key-label left-label">に</span>
+                <span class="key-label up-label">ぬ</span>
+                <span class="key-label right-label">ね</span>
+                <span class="key-label down-label">の</span>
+              </div>
+
+              <!-- Key 6: は -->
+              <div class="keyboard-key" data-key-index="6" data-base-char="は">
+                <span class="key-label center">は</span>
+                <span class="key-label left-label">ひ</span>
+                <span class="key-label up-label">ふ</span>
+                <span class="key-label right-label">へ</span>
+                <span class="key-label down-label">ほ</span>
+              </div>
+
+              <!-- Key 7: ま -->
+              <div class="keyboard-key" data-key-index="7" data-base-char="ま">
+                <span class="key-label center">ま</span>
+                <span class="key-label left-label">み</span>
+                <span class="key-label up-label">む</span>
+                <span class="key-label right-label">め</span>
+                <span class="key-label down-label">も</span>
+              </div>
+
+              <!-- Key 8: や -->
+              <div class="keyboard-key" data-key-index="8" data-base-char="や">
+                <span class="key-label center">や</span>
+                <span class="key-label left-label">ゃ</span>
+                <span class="key-label up-label">ゆ</span>
+                <span class="key-label right-label">ょ</span>
+                <span class="key-label down-label">よ</span>
+              </div>
+
+              <!-- Key 9: ら -->
+              <div class="keyboard-key" data-key-index="9" data-base-char="ら">
+                <span class="key-label center">ら</span>
+                <span class="key-label left-label">り</span>
+                <span class="key-label up-label">る</span>
+                <span class="key-label right-label">れ</span>
+                <span class="key-label down-label">ろ</span>
+              </div>
+
+              <!-- Key 10 / Left-Bottom: Modifier -->
+              <div class="keyboard-key functional-key" data-key-index="10" id="modifierKey" data-base-char="*">
+                <span class="key-label center font-small">小 ﾞ ﾟ</span>
+              </div>
+
+              <!-- Key 11 / Center-Bottom: わ -->
+              <div class="keyboard-key" data-key-index="11" data-base-char="わ">
+                <span class="key-label center">わ</span>
+                <span class="key-label left-label">を</span>
+                <span class="key-label up-label">ん</span>
+                <span class="key-label right-label">ー</span>
+                <span class="key-label down-label"></span>
+              </div>
+
+              <!-- Key 12 / Right-Bottom: Backspace -->
+              <div class="keyboard-key functional-key" data-key-index="12" id="backspaceKey" data-base-char="⌫">
+                <span class="key-label center">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"></path>
+                    <line x1="18" y1="9" x2="12" y2="15"></line>
+                    <line x1="12" y1="9" x2="18" y2="15"></line>
+                  </svg>
+                </span>
+              </div>
+
+            </div>
+
+            <!-- Bottom Row Control Keys -->
+            <div class="bottom-control-row">
+              <button id="kanaSwitchBtn" class="control-btn font-small">かな</button>
+              <button id="spaceBtn" class="control-btn space-btn">空白</button>
+              <button id="confirmBtn" class="control-btn confirm-btn">確定</button>
+            </div>
+
+            <!-- Dynamic Flick Indicator Overlay (rendered globally over active key) -->
+            <div class="flick-overlay" id="flickOverlay">
+              <div class="flick-circle center-circle" id="flickCenter">あ</div>
+              <div class="flick-arrow left-arrow" id="flickLeft">い</div>
+              <div class="flick-arrow up-arrow" id="flickUp">う</div>
+              <div class="flick-arrow right-arrow" id="flickRight">え</div>
+              <div class="flick-arrow down-arrow" id="flickDown">お</div>
+            </div>
+
+          </section>
+
+        </div>
+
+        <!-- SETTINGS PANEL OVERLAY -->
+        <div class="panel-overlay" id="settingsPanel">
+          <div class="panel-content">
+            <div class="panel-header">
+              <h2>設定</h2>
+              <button id="closeSettingsBtn" class="close-btn">&times;</button>
+            </div>
+            
+            <div class="setting-item">
+              <span class="setting-title">練習模式</span>
+              <div class="mode-select-group">
+                <button class="mode-select-btn active" data-mode="row">五十音</button>
+                <button class="mode-select-btn" data-mode="built-in">精選詞庫</button>
+                <button class="mode-select-btn" data-mode="custom">自訂詞庫</button>
+              </div>
+            </div>
+
+            <!-- Row Selection settings (only displayed for "row" mode) -->
+            <div id="rowSettingsSection" class="setting-item sub-setting">
+              <span class="setting-title">選擇練習行（複選）</span>
+              <div class="row-checkbox-grid" id="kanaRowCheckboxes">
+                <!-- Checkboxes generated dynamically in JS -->
+              </div>
+            </div>
+
+            <!-- Custom Vocabulary input (only displayed for "custom" mode) -->
+            <div id="customSettingsSection" class="setting-item sub-setting hidden">
+              <span class="setting-title">請輸入自訂假名 (平/片假名或ー)</span>
+              <textarea id="customVocabularyInput" placeholder="在此輸入要練習的假名（例如：わたしはにほんごをべんきょうしています）"></textarea>
+              <button id="saveCustomBtn" class="panel-action-btn">確認儲存</button>
+            </div>
+
+            <!-- JLPT / Phrase selection (only displayed for "built-in" mode) -->
+            <div id="builtinSettingsSection" class="setting-item sub-setting hidden">
+              <span class="setting-title">詞庫分類</span>
+              <div class="category-select-group">
+                <button class="category-btn active" data-category="ALL">全部單字</button>
+                <button class="category-btn" data-category="N5">JLPT N5</button>
+                <button class="category-btn" data-category="N4">JLPT N4</button>
+                <button class="category-btn" data-category="N3">JLPT N3</button>
+                <button class="category-btn" data-category="Phrases">常用會話</button>
+              </div>
+            </div>
+
+            <div class="setting-item">
+              <div class="toggle-setting">
+                <div>
+                  <span class="setting-title">視覺鍵盤提示</span>
+                  <p class="setting-desc">高亮下一個假名所在的按鍵與滑動方向</p>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" id="hintToggle" checked>
+                  <span class="slider"></span>
+                </label>
+              </div>
+            </div>
+
+            <div class="setting-item">
+              <div class="toggle-setting">
+                <div>
+                  <span class="setting-title">打字統計紀錄</span>
+                  <p class="setting-desc">清空儲存在瀏覽器中的歷史錯誤紀錄與 CPM</p>
+                </div>
+                <button id="resetStatsBtn" class="danger-btn">清空資料</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RESULTS / SUMMARY MODAL -->
+        <div class="panel-overlay" id="resultsPanel">
+          <div class="panel-content text-center">
+            <h2>練習成果</h2>
+            <div class="result-stats-grid">
+              <div class="result-stat-box">
+                <span class="stat-num" id="resultCpm">--</span>
+                <span class="stat-lbl">平均 CPM</span>
+              </div>
+              <div class="result-stat-box">
+                <span class="stat-num" id="resultAccuracy">--%</span>
+                <span class="stat-lbl">正確率</span>
+              </div>
+              <div class="result-stat-box">
+                <span class="stat-num" id="resultTime">--s</span>
+                <span class="stat-lbl">花費時間</span>
+              </div>
+            </div>
+
+            <!-- Heatmap Title / Explainer -->
+            <div class="heatmap-section-header">
+              <h3>鍵盤輸入錯誤熱力圖</h3>
+              <p>顏色愈深（偏紅）代表錯誤次數愈多</p>
+            </div>
+
+            <!-- Miniature Heatmap Keyboard (Clone of Gboard layout) -->
+            <div class="heatmap-keyboard" id="heatmapKeyboard">
+              <!-- Dynamic copies of keys rendered in JS with error-intensity classes -->
+            </div>
+
+            <div class="result-actions">
+              <button id="restartBtn" class="panel-action-btn primary">再次練習</button>
+              <button id="resultSettingsBtn" class="panel-action-btn secondary">調整設定</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    
+    <!-- Phone shadow and home bar detail -->
+    <div class="phone-home-indicator"></div>
+  </div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
