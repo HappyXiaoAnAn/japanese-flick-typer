@@ -1,0 +1,22 @@
+{
+  "name": "フリック打！ - 日文九宮格輸入練習",
+  "short_name": "フリック打！",
+  "description": "精美的日文九宮格（Flick）打字練習網頁應用程式，助你快速建立日文輸入肌肉記憶。",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#120e26",
+  "theme_color": "#7c5dfa",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

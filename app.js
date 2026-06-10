@@ -960,4 +960,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Settings hint toggle updates hints
   hintToggle.addEventListener('change', renderVisualHints);
+
+  // Register Service Worker for PWA offline capabilities
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./service-worker.js')
+        .then(reg => console.log('Service Worker registered:', reg.scope))
+        .catch(err => console.error('Service Worker registration failed:', err));
+    });
+  }
 });
+
