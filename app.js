@@ -84,7 +84,7 @@ const KEY_MAPPINGS = {
     3: { center: "サ", left: "シ", up: "ス", right: "セ", down: "ソ" },
     4: { center: "タ", left: "チ", up: "ツ", right: "テ", down: "ト" },
     5: { center: "ナ", left: "ニ", up: "ヌ", right: "ネ", down: "ノ" },
-    6: { center: "ハ", left: "ヒ", fill: "フ", up: "フ", right: "ヘ", down: "ホ" },
+    6: { center: "ハ", left: "ヒ", up: "フ", right: "ヘ", down: "ホ" },
     7: { center: "マ", left: "ミ", up: "ム", right: "メ", down: "モ" },
     8: { center: "ヤ", left: "ャ", up: "ユ", right: "ョ", down: "ヨ" },
     9: { center: "ラ", left: "リ", up: "ル", right: "レ", down: "ロ" },
@@ -564,27 +564,54 @@ function applyCharacterModifier() {
   const lastChar = inputBuffer[inputBuffer.length - 1];
   const modifiedChar = MODIFIER_MAP[lastChar];
   
+  // Every press of the modifier key counts as a keystroke
+  totalKeystrokes++;
+  
   if (modifiedChar) {
-    // Check if the modified transition matches target character at this position
+    // Validate if the modified transition matches target character at this position
     const targetReading = currentWord.kana;
     const currentPos = inputBuffer.length - 1;
     const targetChar = targetReading[currentPos];
     
-    // Replace last character
-    inputBuffer = inputBuffer.slice(0, -1) + modifiedChar;
-    correctKeystrokes++;
-    
-    updateInputDisplay();
-    
-    if (inputBuffer === targetReading) {
-      setTimeout(advanceWord, 180);
+    if (isInputValid(modifiedChar, targetChar)) {
+      // Replace last character
+      inputBuffer = inputBuffer.slice(0, -1) + modifiedChar;
+      correctKeystrokes++;
+      
+      updateInputDisplay();
+      
+      if (inputBuffer === targetReading) {
+        setTimeout(advanceWord, 180);
+      } else {
+        renderVisualHints();
+      }
     } else {
-      renderVisualHints();
+      // Modification is invalid for target character
+      errorKeystrokes++;
+      recordKeyError(10); // Modifier key index
+      
+      // Trigger card shake animation
+      const card = document.getElementById('wordCard');
+      if (card) {
+        card.classList.add('error-shake');
+        setTimeout(() => card.classList.remove('error-shake'), 300);
+      }
+      
+      // Provide temporary visual input failure display
+      const tempBuffer = inputBuffer.slice(0, -1) + `<span class="char-incorrect">${lastChar}</span>`;
+      inputActiveEl.innerHTML = tempBuffer;
     }
   } else {
     // Modifier pressed on non-modifiable character counts as minor input error
     errorKeystrokes++;
     recordKeyError(10); // Modifier key index
+    
+    // Trigger card shake animation
+    const card = document.getElementById('wordCard');
+    if (card) {
+      card.classList.add('error-shake');
+      setTimeout(() => card.classList.remove('error-shake'), 300);
+    }
   }
   
   updateHUDStats();
@@ -651,16 +678,33 @@ function renderVisualHints() {
   if (!hintToggle.checked) return;
 
   const targetReading = currentWord.kana;
-  const currentPos = inputBuffer.length;
-  
-  if (currentPos >= targetReading.length) return;
-  
-  const nextChar = targetReading[currentPos];
+  if (inputBuffer === targetReading) return;
+
+  let currentPos = inputBuffer.length;
+  let nextChar = null;
+  let isWaitingForModifier = false;
+
+  if (currentPos >= targetReading.length) {
+    // Input is the same length but doesn't match target, which means the last character needs modification
+    currentPos = targetReading.length - 1;
+    nextChar = targetReading[currentPos];
+    isWaitingForModifier = true;
+  } else {
+    nextChar = targetReading[currentPos];
+    
+    // Check if the character before currentPos needs modification
+    const lastPos = currentPos - 1;
+    const lastTyped = lastPos >= 0 ? inputBuffer[lastPos] : null;
+    const lastTarget = lastPos >= 0 ? targetReading[lastPos] : null;
+    
+    if (lastTyped && lastTarget && lastTyped !== lastTarget && getBaseCharacters(lastTarget).includes(lastTyped)) {
+      isWaitingForModifier = true;
+    }
+  }
   
   // Find which key and direction nextChar belongs to
   let foundKeyIndex = null;
   let foundDirection = null;
-  let useModifier = false;
   
   // Check standard mappings
   const layout = isKatakana ? KEY_MAPPINGS.katakana : KEY_MAPPINGS.hiragana;
@@ -686,7 +730,6 @@ function renderVisualHints() {
           if (char === base) {
             foundKeyIndex = parseInt(keyIdx);
             foundDirection = dir;
-            useModifier = true;
             break;
           }
         }
@@ -698,12 +741,7 @@ function renderVisualHints() {
 
   // If we found the key & direction, show indicators
   if (foundKeyIndex) {
-    // If the user already typed the base character and needs to press modifier
-    const lastPos = currentPos - 1;
-    const lastTyped = lastPos >= 0 ? inputBuffer[lastPos] : null;
-    const lastTarget = lastPos >= 0 ? targetReading[lastPos] : null;
-    
-    if (lastTyped && lastTarget && lastTyped !== lastTarget && getBaseCharacters(lastTarget).includes(lastTyped)) {
+    if (isWaitingForModifier) {
       // Highlight modifier key
       modifierKeyBtn.classList.add('hint-key');
     } else {
@@ -870,7 +908,7 @@ function resetHUDStats() {
 }
 
 function calculateCPM(seconds) {
-  if (seconds <= 0 || correctKeystrokes === 0) return 0;
+  if (seconds < 0.5 || correctKeystrokes === 0) return 0;
   const minutes = seconds / 60;
   return Math.round(correctKeystrokes / minutes);
 }
@@ -888,9 +926,9 @@ function recordKeyError(keyIndex) {
 // --- Session End & Heatmap Generation ---
 
 function completeSession() {
+  const finalTime = getElapsedTime().toFixed(1);
   stopTimer();
   
-  const finalTime = getElapsedTime().toFixed(1);
   const finalCpm = calculateCPM(parseFloat(finalTime));
   const finalAccuracy = calculateAccuracy();
 

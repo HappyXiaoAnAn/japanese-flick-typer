@@ -97,7 +97,7 @@ export const COMMON_PHRASES = [
   { kanji: "ごちそうさまでした", kana: "ごちそうさまでした", level: "Phrases", english: "Thank you for the meal (after eating)" },
   { kanji: "おやすみなさい", kana: "おやすみなさい", level: "Phrases", english: "Good night" },
   { kanji: "いってらっしゃい", kana: "いってらっしゃい", level: "Phrases", english: "Take care / Have a good day" },
-  { kanji: "いってきます", kana: "いいてきます", level: "Phrases", english: "I'm leaving (home)" },
+  { kanji: "いってきます", kana: "いってきます", level: "Phrases", english: "I'm leaving (home)" },
   { kanji: "ただいま", kana: "ただいま", level: "Phrases", english: "I'm home" },
   { kanji: "おかえりなさい", kana: "おかえりなさい", level: "Phrases", english: "Welcome back" },
   { kanji: "お疲れ様でした", kana: "おつかれさまでした", level: "Phrases", english: "Thank you for your hard work" }
